@@ -20,24 +20,30 @@ row2col = true
 # row2col = true
 rows = 7
 cols = 4
-layers = 3
+layers = 4
 keymap = [
     [
-        ["B", "F", "D", "L"], ["P", "O", "U", "Y"],
-        ["MT(C, LCtrl)", "MT(S, LAlt)", "MT(T, LGui)", "MT(R, LShift)"], ["MT(N, RShift)", "MT(A, RGui)", "MT(I, RAlt)", "MT(H, RCtrl)"],
-        ["V", "G", "M", "W"], ["Dot", "Comma", "Quote", "K"],
-        ["LT(2, Backspace)", "LT(1, Space)", "E", "Enter"]
+        ["__", "__", "__", "__"],                               ["__", "__", "__", "__"],
+        ["F", "MT(P, LCtrl)", "MT(C, LAlt)", "MT(R, LShift)"],  ["MT(N, RShift)", "MT(H, RAlt)", "MT(L, RCtrl)","M"],
+        ["D", "LT(3, S)", "A", "E"],                            ["I", "O", "LT(3, T)", "G"],
+        ["LT(2, Space)", "Tab", "LGui", "LT(1, Enter)"]
     ],
     [
-        ["KpEnter", "Kp7", "Kp8", "Kp9"], ["KbVolumeDown", "KbMute", "KbVolumeUp", "__"],
-        ["Kp0", "Kp4", "Kp5", "Kp6"], ["Left", "Down", "UP", "Right"],
-        ["KpDot", "Kp1", "Kp2", "Kp3"], ["Home", "PageDown", "PageUp", "End"],
+        ["__", "__", "__", "__"],                   ["KbVolumeDown", "KbMute", "KbVolumeUp", "Backspace"],
+        ["Escape", "Grave", "Backslash", "Minus"],  ["Minus", "Slash", "Equal", "PageUp"],
+        ["Kc2", "Kc3", "Kc4", "Kc7"],               ["Dot", "Comma", "Quote", "PageDown"],
         ["__", "__", "__", "__"]
     ],
     [
-        ["F12", "F7", "F8", "F9"], ["__", "__", "__", "__"],
-        ["F11", "F4", "F5", "F6"], ["__", "__", "__", "__"],
-        ["F10", "F1", "F2", "F3"], ["__", "__", "__", "__"],
+        ["__", "__", "__", "__"], 		["__", "__", "__", "__"],
+        ["__", "F1", "F2", "F3"],    	["Kc7", "Kc8", "Kc9", "__"],
+        ["__", "F10", "F11", "F12"], 	["Kc0", "Kc1", "Kc2", "__"],
+        ["__", "__", "__", "__"]
+    ],
+    [
+        ["__", "__", "__", "__"], 		            ["__", "__", "__", "__"],
+        ["__", "Escape", "PageUp", "PrintScreen"],  ["Backspace", "UP", "Delete", "__"],
+        ["__", "Home", "PageDown", "End"], 	        ["Left", "Down", "Right", "__"],
         ["__", "__", "__", "__"]
     ],
 ]
