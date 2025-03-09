@@ -11,37 +11,38 @@ board = "XIAO BLE"
 # Input and output pins are mandatory
 # NFC: GPIO 0.9 and 0.10
 input_pins = ["P1_12", "P0_10", "P0_09", "P1_11"]
-output_pins = ["P0_02", "P1_15", "P0_03", "P1_14", "P0_28", "P1_13", "P0_29"]
+output_pins = ["P0_03", "P1_14", "P0_28", "P1_13", "P0_29"]
 # WARNING: Currently row2col/col2row is set in RMK's feature gate, row2col config here is valid ONLY when you're using cloud compilation
 row2col = true
 
 [layout]
 # WARNING: Currently row2col/col2row is set in RMK's feature gate, configs here do nothing actually
 # row2col = true
-rows = 7
+rows = 5
 cols = 4
-layers = 4
+layers = 5
 keymap = [
     [
-        ["__", "__", "__", "__"],                               ["__", "__", "__", "__"],
-        ["F", "MT(P, LCtrl)", "MT(C, LAlt)", "MT(R, LShift)"],  ["MT(N, RShift)", "MT(H, RAlt)", "MT(L, RCtrl)","M"],
-        ["D", "LT(3, S)", "A", "E"],                            ["I", "O", "LT(3, T)", "G"],
-        ["LT(2, Space)", "Tab", "LGui", "LT(1, Enter)"]
+        ["__", "MT(P, LCtrl)", "MT(C, LAlt)", "MT(R, LShift)"],  ["MT(N, RShift)", "MT(H, RAlt)", "MT(L, RCtrl)","__"],
+        ["D", "LT(4, S)", "A", "E"],                            ["I", "O", "LT(4, T)", "G"],
+        ["LT(3, Space)", "Tab", "LGui", "LT(1, Enter)"]
     ],
     [
-        ["__", "__", "__", "__"],                   ["KbVolumeDown", "KbMute", "KbVolumeUp", "Backspace"],
-        ["Escape", "Grave", "Backslash", "Minus"],  ["Minus", "Slash", "Equal", "PageUp"],
-        ["Kc2", "Kc3", "Kc4", "Kc7"],               ["Dot", "Comma", "Quote", "PageDown"],
+        ["__", "MT(Grave, LCtrl)", "MT(Backslash, LAlt)", "WM(Minus, LShift)"],  ["LT(2, Minus)", "MT(Slash, RAlt)", "MT(Equal, RCtrl)", "__"],
+        ["WM(Kc2, LShift)", "WM(Kc4, LShift)", "WM(Kc4, LShift)", "WM(Kc7, LShift)"],   ["Dot", "Comma", "Quote", "__"],
         ["__", "__", "__", "__"]
     ],
     [
-        ["__", "__", "__", "__"], 		["__", "__", "__", "__"],
+        ["__", "WM(Grave, LShift)", "__", "WM(Backslash, LShift)"],["WM(Equal, LShift)", "WM(Kc8, LShift)", "WM(Kc5, LShift)", "__"],
+        ["__", "WM(Kc6, LShift)", "WM(Kc1, LShift)", "WM(Slash, LShift)"],["WM(Semicolon, LShift)", "Semicolon", "WM(Quote, LShift)", "__"],
+        ["__", "__", "__", "__"]
+    ],
+    [
         ["__", "F1", "F2", "F3"],    	["Kc7", "Kc8", "Kc9", "__"],
         ["__", "F10", "F11", "F12"], 	["Kc0", "Kc1", "Kc2", "__"],
         ["__", "__", "__", "__"]
     ],
     [
-        ["__", "__", "__", "__"], 		            ["__", "__", "__", "__"],
         ["__", "Escape", "PageUp", "PrintScreen"],  ["Backspace", "UP", "Delete", "__"],
         ["__", "Home", "PageDown", "End"], 	        ["Left", "Down", "Right", "__"],
         ["__", "__", "__", "__"]
