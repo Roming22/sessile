@@ -86,7 +86,26 @@ This board is designed for RMK. 😏
 Current RMK build is available in the
 [Releases](https://github.com/willpuckett/sessile/releases/latest).
 
-You can build the firmware yourself by cloning this repository and running
+You have a few options to build the firmware yourself.
+
+#### Dev Container + IDE
+
+The repo includes a
+[Dev Container](https://containers.dev/)
+(`.devcontainer/`) with the pinned Rust toolchain, ARM target, and firmware
+build tools already installed.
+
+1. Open this repository in VS Code or Cursor with the Dev Containers extension.
+2. Choose **Reopen in Container** when prompted (or run
+   **Dev Containers: Reopen in Container** from the command palette).
+3. Wait for the container to finish creating (dependencies are fetched
+   automatically).
+4. Open the **Run and Debug** view, select **Build firmware**, and start it
+   (or press <kbd>F5</kbd>).
+
+#### Command line
+
+From a terminal:
 
 ```bash
 cd rmk && cargo make uf2 --release

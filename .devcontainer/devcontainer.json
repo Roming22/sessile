@@ -1,0 +1,34 @@
+{
+  "name": "Sessile RMK Firmware",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TARGET_ARCH": "thumbv7em-none-eabihf",
+      "LLVM_VERSION": "14",
+      "RUST_TOOLCHAIN": "1.96.0"
+    }
+  },
+  "workspaceFolder": "/workspaces/sessile",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
+        "rust-analyzer.linkedProjects": ["rmk/Cargo.toml"],
+        "[rust]": {
+          "editor.defaultFormatter": "rust-lang.rust-analyzer"
+        },
+        "[toml]": {
+          "editor.defaultFormatter": "tamasfe.even-better-toml"
+        }
+      },
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  },
+  "postCreateCommand": "cd rmk && cargo fetch",
+  "remoteEnv": {
+    "CARGO_TERM_COLOR": "always"
+  }
+}
