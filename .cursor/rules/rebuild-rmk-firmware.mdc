@@ -1,0 +1,15 @@
+---
+description: Rebuild RMK firmware after any change under rmk/
+globs: rmk/**
+alwaysApply: true
+---
+
+# Rebuild firmware after rmk/ changes
+
+After any edit under `rmk/` (keymap, config, Cargo, source, `vial.json`, etc.), rebuild before considering the task done.
+
+```bash
+cd rmk && cargo make uf2 --release
+```
+
+Do not wait for the user to ask. If the build fails, fix it and rebuild.

@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/willpuckett/sessile.git"
+    "url": "git+https://github.com/roming22/sessile.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/willpuckett/sessile/issues"
+    "url": "https://github.com/roming22/sessile/issues"
   },
-  "homepage": "https://github.com/willpuckett/sessile#readme",
+  "homepage": "https://github.com/roming22/sessile#readme",
   "dependencies": {
     "ergogen": "github:willpuckett/ergogen#develop"
   },
