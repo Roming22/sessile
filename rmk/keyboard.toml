@@ -6,6 +6,10 @@ product_id = 0x4643
 manufacturer = "RMK"
 board = "XIAO BLE"
 
+[host]
+# Vial unlock: hold all Ctrl and Shift keys (LCtrl, LShift, RShift, RCtrl)
+unlock_keys = [[1, 2], [3, 2], [0, 3], [2, 3]]
+
 [matrix]
 row_pins = ["P1_12", "P0_10", "P0_09", "P1_11"]
 col_pins = ["P0_02", "P1_15", "P0_03", "P1_14", "P0_28", "P1_13", "P0_29"]
@@ -13,7 +17,7 @@ col_pins = ["P0_02", "P1_15", "P0_03", "P1_14", "P0_28", "P1_13", "P0_29"]
 [layout]
 rows = 4
 cols = 7
-layers = 4
+layers = 6
 matrix_map = """
 (0,0,L) (1,0,L) (2,0,L) (3,0,L) (0,1,R) (1,1,R) (2,1,R) (3,1,R)
 (0,2,L) (1,2,L) (2,2,L) (3,2,L) (0,3,R) (1,3,R) (2,3,R) (3,3,R)
@@ -21,40 +25,107 @@ matrix_map = """
                 (0,6,L) (1,6,L) (2,6,R) (3,6,R)
 """
 
+# Ported from zmk/config (alpha / fn_num / symbol / system / shortcut / gaming).
+# ZMK &mt is balanced (permissive hold, 250ms); &lt is hold-preferred (HP, 250ms).
+# Mod-morphs are RMK forks. F13 is a dummy for the symbol-layer dot/colon morph
+# so it does not collide with the plain Dot on fn_num. TD(0)/TD(1) wrap the
+# underscore/pipe morph because this RMK build cannot nest SHIFTED inside MT.
+# zmk/config/combos/3_system.dtsi is not included by combos.dtsi, so it is omitted.
+#
+# Combo actions and fork triggers do not expand @aliases or layer names; they
+# must match the token after alias + layer-name resolution (e.g. LT(3, S, HP)).
+
+[aliases]
+# Alpha home-row mods (HRM) and layer-taps (HP)
+hrm_d = "MT(D, LCtrl, HRM)"
+hrm_c = "MT(C, LAlt, HRM)"
+hrm_r = "MT(R, LShift, HRM)"
+hrm_n = "MT(N, RShift, HRM)"
+hrm_h = "MT(H, RAlt, HRM)"
+hrm_l = "MT(L, RCtrl, HRM)"
+lt_p = "LT(shortcut, P, HP)"
+lt_s = "LT(system, S, HP)"
+lt_t = "LT(system, T, HP)"
+lt_g = "LT(shortcut, G, HP)"
+lt_space = "LT(fn_num, Space, HP)"
+lt_enter = "LT(symbol, Enter, HP)"
+# Fn/num and system home-row mods (HP so chords resolve on press)
+hp_f1 = "MT(F1, LCtrl, HP)"
+hp_f2 = "MT(F2, LAlt, HP)"
+hp_f3 = "MT(F3, LShift, HP)"
+hp_7 = "MT(7, RShift, HP)"
+hp_8 = "MT(8, RAlt, HP)"
+hp_9 = "MT(9, RCtrl, HP)"
+hp_esc = "MT(Escape, LCtrl, HP)"
+hp_pgup = "MT(PageUp, LAlt, HP)"
+hp_pscr = "MT(PrintScreen, LShift, HP)"
+# Symbol morphs. @under/@pipe are TD workarounds (underscore / pipe).
+# @dot_colon is F13 so fn_num Dot stays a period.
+hp_grave = "MT(Grave, LCtrl, HP)"
+hp_bslh = "MT(Backslash, LAlt, HP)"
+under = "TD(0)"
+pipe = "TD(1)"
+hp_minus = "MT(Minus, RShift, HP)"
+hp_slash = "MT(Slash, RAlt, HP)"
+hp_equal = "MT(Equal, RCtrl, HP)"
+at = "SHIFTED(2)"
+hash = "SHIFTED(3)"
+dollar = "SHIFTED(4)"
+amp = "SHIFTED(7)"
+dot_colon = "F13"
+
 [[layer]]
-name = "caster"
+name = "alpha"
 keys = """
-B F D L P O U Y
-MT(C, LCtrl) MT(S, LAlt) MT(T, LGui) MT(R, LShift) MT(N, RShift) MT(A, RGui) MT(I, RAlt) MT(H, LCtrl)
-V G M W Dot Comma Quote K
-LT(2, Backspace) LT(1, Space) E Enter
+No           No           No           No            No            No           No           No
+No           @hrm_d       @hrm_c       @hrm_r        @hrm_n        @hrm_h       @hrm_l       No
+@lt_p        @lt_s        A            E             I             O            @lt_t        @lt_g
+                          @lt_space    Tab           LGui          @lt_enter
 """
 
 [[layer]]
-name = "numbnav"
+name = "fn_num"
 keys = """
-KpEnter Kp7 Kp8 Kp9 KbVolumeDown KbMute KbVolumeUp __
-Kp0 Kp4 Kp5 Kp6 Left Down Up Right
-KpDot Kp1 Kp2 Kp3 Home PageDown PageUp End
-__ __ __ __
+No           No           No           No            No            No           No           No
+No           @hp_f1       @hp_f2       @hp_f3        @hp_7         @hp_8        @hp_9        No
+No           F10          F11          F12           0             1            2            Dot
+                          __           __            __            __
 """
 
 [[layer]]
-name = "function"
+name = "symbol"
 keys = """
-F12 F7 F8 F9 MediaPrevTrack MediaPlayPause MediaNextTrack MediaEject
-F11 F4 F5 F6 __ __ __ __
-F10 F1 F2 F3 __ __ __ __
-__ __ __ Bootloader
+No           No           No           No            No            No           No           No
+No           @hp_grave    @hp_bslh     @under        @hp_minus     @hp_slash    @hp_equal    No
+@at          @hash        @dollar      @amp          @dot_colon    Comma        Quote        No
+                          __           __            __            __
 """
 
 [[layer]]
-name = "upsidedown"
+name = "system"
 keys = """
-Y U O P L D F B
-MT(H, LCtrl) MT(I, LAlt) MT(A, LGui) MT(N, LShift) MT(R, RShift) MT(T, RGui) MT(S, RAlt) MT(C, LCtrl)
-K Quote Comma Dot W M G V
-LT(2, Enter) LT(1, E) Space Backspace
+No           No           No           No            No            No           No           No
+No           @hp_esc      @hp_pgup     @hp_pscr      Backspace     Up           Delete       No
+No           Home         PageDown     End           Left          Down         Right        No
+                          __           __            __            __
+"""
+
+[[layer]]
+name = "shortcut"
+keys = """
+No           No           No           No            No            No           No           No
+No           TH(MediaPrevTrack, MediaRewind) MediaPlayPause TH(MediaNextTrack, MediaFastForward) WM(Left, LGui | LShift) WM(PageUp, LGui) WM(Right, LGui | LShift) No
+No           AudioVolDown AudioMute    AudioVolUp    WM(Left, LGui) WM(PageDown, LGui) WM(Right, LGui) WM(F10, LAlt)
+                          __           __            __            __
+"""
+
+[[layer]]
+name = "gaming"
+keys = """
+No           No           No           No            No            No           No           No
+No           Q            W            E             Z             C            V            No
+LShift       A            S            D             B             G            N            Escape
+                          Space        Tab           Backspace     Enter
 """
 
 [ble]
@@ -75,221 +146,105 @@ scrolllock = { pin = "P0_14", low_active = false }
 clear_storage = false
 
 [behavior.morse]
-enable_flow_tap = true
-unilateral_tap = true
+# Flow tap stays off: this parser has no per-profile enable_flow_tap, and a
+# global setting would tap LT thumbs (Space / Enter) during fast typing.
+unilateral_tap = false
 permissive_hold = true
-hold_timeout = "200ms"
-prior_idle_time = "150ms"
-
-[[behavior.macro.macros]]
-operations = [{ operation = "text", text = "=>" }]
-
-[behavior.combo]
-timeout = "25ms"
-combos = [
-    { actions = [
-        "MT(S, LAlt)",
-        "MT(T, LGui)",
-    ], output = "Esc", layer = 0 },
-    { actions = [
-        "MT(R, LShift)",
-        "MT(N, RShift)",
-    ], output = "CapsWordToggle", layer = 0 },
-    { actions = [
-        "MT(S, LAlt)",
-        "MT(R, LShift)",
-    ], output = "OSM(LShift)", layer = 0 },
-    { actions = [
-        "MT(I, RAlt)",
-        "MT(N, RShift)",
-    ], output = "OSM(RShift)", layer = 0 },
-    { actions = [
-        "MT(C, LCtrl)",
-        "MT(H, LCtrl)",
-    ], output = "CapsLock", layer = 0 },
-
-    { actions = [
-        "MT(S, LAlt)",
-        "MT(T, LGui)",
-        "MT(R, LShift)",
-    ], output = "OSL(3)", layer = 0 },
-    { actions = [
-        "MT(I, RAlt)",
-        "MT(A, RGui)",
-        "MT(N, RShift)",
-    ], output = "OSL(3)", layer = 0 },
-    { actions = [
-        "MT(C, LCtrl)",
-        "MT(S, LAlt)",
-    ], output = "Tab", layer = 0 },
-    { actions = [
-        "MT(T, LGui)",
-        "MT(R, LShift)",
-    ], output = "-" },
-    { actions = [
-        "W",
-        "M",
-    ], output = "SHIFTED(-)" },
-    { actions = [
-        "Dot",
-        "Comma",
-    ], output = "/" },
-    { actions = [
-        "Quote",
-        "K",
-    ], output = "SHIFTED(/)", layer = 0 },
-    { actions = [
-        "MT(N, RShift)",
-        "MT(A, RGui)"
-    ], output = "SHIFTED(;)", layer = 0 },
-    { actions = [
-        "MT(A, RGui)",
-        "MT(I, RAlt)",
-    ], output = "SHIFTED(Quote)", layer = 0 },
-    { actions = [
-        "MT(H, LCtrl)",
-        "MT(I, RAlt)",
-    ], output = ";", layer = 0 },
-    { actions = [
-        "P",
-        "O",
-    ], output = "\\", layer = 0 },
-    { actions = [
-        "V",
-        "G",
-    ], output = "Q", layer = 0 },
-    { actions = [
-        "G",
-        "M",
-    ], output = "J", layer = 0 },
-    { actions = [
-        "V",
-        "W",
-    ], output = "Z", layer = 0 },
-    { actions = [
-        "B",
-        "MT(C, LCtrl)",
-    ], output = "1", layer = 0 },
-    { actions = [
-        "F",
-        "MT(S, LAlt)",
-    ], output = "2", layer = 0 },
-    { actions = [
-        "D",
-        "MT(T, LGui)",
-    ], output = "3", layer = 0 },
-    { actions = [
-        "L",
-        "MT(R, LShift)",
-    ], output = "4", layer = 0 },
-    { actions = [
-        "LT(2, Backspace)",
-        "LT(1, Space)",
-    ], output = "5", layer = 0 },
-    { actions = [
-        "E",
-        "Enter",
-    ], output = "6", layer = 0 },
-    { actions = [
-        "P",
-        "MT(N, RShift)",
-    ], output = "7", layer = 0 },
-    { actions = [
-        "O",
-        "MT(A, RGui)",
-    ], output = "8", layer = 0 },
-    { actions = [
-        "U",
-        "MT(I, RAlt)",
-    ], output = "9", layer = 0 },
-    { actions = [
-        "Y",
-        "MT(H, LCtrl)",
-    ], output = "0", layer = 0 },
-    { actions = [
-        "V",
-        "MT(C, LCtrl)",
-    ], output = "WM(Z, LGui)", layer = 0 },
-    { actions = [
-        "G",
-        "MT(S, LAlt)",
-    ], output = "WM(X, LGui)", layer = 0 },
-    { actions = [
-        "M",
-        "MT(T, LGui)",
-    ], output = "WM(C, LGui)", layer = 0 },
-    { actions = [
-        "W",
-        "MT(R, LShift)",
-    ], output = "WM(V, LGui)", layer = 0 },
-    { actions = [
-        "Dot",
-        "MT(N, RShift)",
-    ], output = "Left", layer = 0 },
-    { actions = [
-        "Comma",
-        "MT(A, RGui)",
-    ], output = "Down", layer = 0 },
-    { actions = [
-        "Quote",
-        "MT(I, RAlt)",
-    ], output = "UP", layer = 0 },
-    { actions = [
-        "K",
-        "MT(H, LCtrl)",
-    ], output = "Right", layer = 0 },
-    { actions = [
-        "B",
-        "F",
-    ], output = "Grave", layer = 0 },
-    { actions = [
-        "F",
-        "D",
-    ], output = "X", layer = 0 },
-    { actions = [
-        "D",
-        "L",
-    ], output = "=" },
-    # { actions = [
-    #     "Comma",
-    #     "Quote",
-    #     "K",
-    # ], output = "Macro0", layer = 0 },
-    { actions = [
-        "O",
-        "U",
-    ], output = "LeftBracket", layer = 0 },
-    { actions = [
-        "P",
-        "Y",
-    ], output = "RightBracket", layer = 0 },
-    { actions = [
-        "Y",
-        "O",
-    ], output = "SHIFTED(9)", layer = 0 },
-    { actions = [
-        "U",
-        "P",
-    ], output = "SHIFTED(0)", layer = 0 },
-    { actions = [
-        "Comma",
-        "Quote",
-    ], output = "SHIFTED(LeftBracket)", layer = 0 },
-    { actions = [
-        "Dot",
-        "K",
-    ], output = "SHIFTED(RightBracket)", layer = 0 },
-    { actions = [
-        "Comma",
-        "K",
-    ], output = "SHIFTED(Comma)", layer = 0 },
-    { actions = [
-        "Dot",
-        "Quote",
-    ], output = "SHIFTED(Dot)", layer = 0 },
+hold_timeout = "250ms"
+gap_timeout = "250ms"
+morses = [
+    # TD(0): ZMK mt_under — tap underscore, hold LShift
+    { tap = "SHIFTED(Minus)", hold = "LShift", profile = "HP" },
+    # TD(1): shifted mt_under — tap pipe, hold LShift
+    { tap = "SHIFTED(Backslash)", hold = "LShift", profile = "HP" },
+    # TD(2): unused on the keymap (caps combo is tap-only CapsWordToggle)
+    { tap = "CapsWordToggle", hold = "CapsLock" },
 ]
 
+[behavior.morse.profiles]
+HRM = { unilateral_tap = true, permissive_hold = true, hold_timeout = "250ms", gap_timeout = "250ms" }
+# ZMK &lt default flavor = "hold-preferred"
+HP = { hold_on_other_press = true, unilateral_tap = false, hold_timeout = "250ms", gap_timeout = "250ms" }
+
+[behavior.fork]
+# This RMK build cannot nest SHIFTED/WM inside MT, so unshifted morph taps use
+# MT(plain_key, mod) and shifted morphs keep the triggering Shift.
+# Triggers must match the token after alias expansion.
+forks = [
+    # ZMK backslash / caret (mt_bslh)
+    { trigger = "MT(Backslash, LAlt, HP)", negative_output = "MT(Backslash, LAlt, HP)", positive_output = "MT(6, LAlt, HP)", match_any = "LShift|RShift", kept_modifiers = "LShift|RShift" },
+    # ZMK underscore / pipe (mt_under, via TD(0) / TD(1))
+    { trigger = "TD(0)", negative_output = "TD(0)", positive_output = "TD(1)", match_any = "LShift|RShift" },
+    # ZMK minus / plus (mt_minus)
+    { trigger = "MT(Minus, RShift, HP)", negative_output = "MT(Minus, RShift, HP)", positive_output = "MT(Equal, RShift, HP)", match_any = "LShift|RShift", kept_modifiers = "LShift|RShift" },
+    # ZMK slash / asterisk (mt_slsh)
+    { trigger = "MT(Slash, RAlt, HP)", negative_output = "MT(Slash, RAlt, HP)", positive_output = "MT(8, RAlt, HP)", match_any = "LShift|RShift", kept_modifiers = "LShift|RShift" },
+    # ZMK equal / percent (mt_equal)
+    { trigger = "MT(Equal, RCtrl, HP)", negative_output = "MT(Equal, RCtrl, HP)", positive_output = "MT(5, RCtrl, HP)", match_any = "LShift|RShift", kept_modifiers = "LShift|RShift" },
+    # Shift+' → " even when home-row shift is still resolving
+    { trigger = "Quote", negative_output = "Quote", positive_output = "SHIFTED(Quote)", match_any = "LShift|RShift" },
+    # ZMK dollar / exclamation
+    { trigger = "SHIFTED(4)", negative_output = "SHIFTED(4)", positive_output = "SHIFTED(1)", match_any = "LShift|RShift" },
+    # ZMK ampersand / question
+    { trigger = "SHIFTED(7)", negative_output = "SHIFTED(7)", positive_output = "SHIFTED(Slash)", match_any = "LShift|RShift" },
+    # ZMK dot / colon (F13 dummy so fn_num Dot stays a normal period)
+    { trigger = "F13", negative_output = "Dot", positive_output = "SHIFTED(Semicolon)", match_any = "LShift|RShift" },
+    # ZMK comma / semicolon
+    { trigger = "Comma", negative_output = "Comma", positive_output = "Semicolon", match_any = "LShift|RShift" },
+]
+
+[behavior.combo]
+timeout = "50ms"
+combos = [
+    # Alpha — actions match expanded @hrm_* / @lt_* (LT names → layer numbers)
+    { actions = ["MT(R, LShift, HRM)", "MT(N, RShift, HRM)"], output = "CapsWordToggle", layer = 0 },
+    { actions = ["MT(C, LAlt, HRM)", "MT(D, LCtrl, HRM)"], output = "X", layer = 0 },
+    { actions = ["MT(D, LCtrl, HRM)", "MT(R, LShift, HRM)"], output = "Z", layer = 0 },
+    { actions = ["MT(C, LAlt, HRM)", "MT(R, LShift, HRM)"], output = "V", layer = 0 },
+    { actions = ["MT(N, RShift, HRM)", "MT(H, RAlt, HRM)"], output = "K", layer = 0 },
+    { actions = ["MT(N, RShift, HRM)", "MT(L, RCtrl, HRM)"], output = "J", layer = 0 },
+    { actions = ["MT(H, RAlt, HRM)", "MT(L, RCtrl, HRM)"], output = "Q", layer = 0 },
+    { actions = ["LT(3, S, HP)", "A"], output = "F", layer = 0 },
+    { actions = ["LT(3, S, HP)", "E"], output = "B", layer = 0 },
+    { actions = ["A", "E"], output = "U", layer = 0 },
+    { actions = ["I", "O"], output = "Y", layer = 0 },
+    { actions = ["I", "LT(3, T, HP)"], output = "W", layer = 0 },
+    { actions = ["O", "LT(3, T, HP)"], output = "M", layer = 0 },
+    { actions = ["LT(4, P, HP)", "LT(4, G, HP)"], output = "TO(5)", layer = 0 },
+
+    # Fn/num — actions match expanded @hp_f* / @hp_7/8/9
+    { actions = ["MT(F2, LAlt, HP)", "MT(F1, LCtrl, HP)"], output = "F4", layer = 1 },
+    { actions = ["MT(F1, LCtrl, HP)", "MT(F3, LShift, HP)"], output = "F6", layer = 1 },
+    { actions = ["MT(F2, LAlt, HP)", "MT(F3, LShift, HP)"], output = "F5", layer = 1 },
+    { actions = ["MT(7, RShift, HP)", "MT(8, RAlt, HP)"], output = "5", layer = 1 },
+    { actions = ["MT(7, RShift, HP)", "MT(9, RCtrl, HP)"], output = "OSM(RShift | RAlt)", layer = 1 },
+    { actions = ["MT(8, RAlt, HP)", "MT(9, RCtrl, HP)"], output = "6", layer = 1 },
+    { actions = ["F10", "F11"], output = "F7", layer = 1 },
+    { actions = ["F10", "F12"], output = "F9", layer = 1 },
+    { actions = ["F11", "F12"], output = "F8", layer = 1 },
+    { actions = ["0", "1"], output = "3", layer = 1 },
+    { actions = ["1", "2"], output = "4", layer = 1 },
+
+    # Symbol — actions match expanded @hp_* / @under / @dollar / @amp / @dot_colon
+    { actions = ["MT(Backslash, LAlt, HP)", "MT(Grave, LCtrl, HP)"], output = "SHIFTED(Comma)", layer = 2 },
+    { actions = ["MT(Grave, LCtrl, HP)", "TD(0)"], output = "OSM(LShift | LCtrl)", layer = 2 },
+    { actions = ["MT(Backslash, LAlt, HP)", "TD(0)"], output = "SHIFTED(Dot)", layer = 2 },
+    { actions = ["MT(Minus, RShift, HP)", "MT(Slash, RAlt, HP)"], output = "SHIFTED(LeftBracket)", layer = 2 },
+    { actions = ["MT(Minus, RShift, HP)", "MT(Equal, RCtrl, HP)"], output = "OSM(RShift | RCtrl)", layer = 2 },
+    { actions = ["MT(Slash, RAlt, HP)", "MT(Equal, RCtrl, HP)"], output = "SHIFTED(RightBracket)", layer = 2 },
+    { actions = ["SHIFTED(3)", "SHIFTED(4)"], output = "LeftBracket", layer = 2 },
+    { actions = ["SHIFTED(4)", "SHIFTED(7)"], output = "RightBracket", layer = 2 },
+    { actions = ["F13", "Comma"], output = "SHIFTED(9)", layer = 2 },
+    { actions = ["Comma", "Quote"], output = "SHIFTED(0)", layer = 2 },
+
+    # Gaming — TO(alpha); parse_key needs a layer number, not a name
+    { actions = ["Q", "E"], output = "F", layer = 5 },
+    { actions = ["A", "D"], output = "R", layer = 5 },
+    { actions = ["LShift", "Escape"], output = "TO(0)", layer = 5 },
+]
 
 [rmk]
-# Maximum number of combos keyboard can store
 combo_max_num = 64
+combo_max_length = 4
+fork_max_num = 16
+morse_max_num = 8
