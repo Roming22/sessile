@@ -18,11 +18,9 @@ use std::{env, fs};
 use xz2::read::XzEncoder;
 
 fn main() {
-    // Generate vial config at the root of project
-    generate_vial_config();
-
-    println!("cargo:rerun-if-changed=keyboard.toml");
+    // Vial layout only depends on vial.json (keymap lives in keyboard.toml / RMK).
     println!("cargo:rerun-if-changed=vial.json");
+    generate_vial_config();
 
     // Put `memory.x` in our output directory and ensure it's
     // on the linker search path.
@@ -38,6 +36,7 @@ fn main() {
     // here, we ensure the build script is only re-run when
     // `memory.x` is changed.
     println!("cargo:rerun-if-changed=memory.x");
+    println!("cargo:rerun-if-changed=keyboard.toml");
 
     // Specify linker arguments.
 
@@ -48,9 +47,6 @@ fn main() {
 
     // Set the linker script to the one provided by cortex-m-rt.
     println!("cargo:rustc-link-arg=-Tlink.x");
-
-    // Use flip-link overflow protection: https://github.com/knurling-rs/flip-link
-    println!("cargo:rustc-linker=flip-link");
 
     // Set the extra linker script from defmt
     println!("cargo:rustc-link-arg=-Tdefmt.x");
@@ -77,10 +73,11 @@ fn generate_vial_config() {
         .unwrap();
 
     let keyboard_id: Vec<u8> = vec![0xB9, 0xBC, 0x09, 0xB2, 0x9D, 0x37, 0x4C, 0xEA];
-    let const_declarations = vec![
+    let const_declarations = [
         const_declaration!(pub VIAL_KEYBOARD_DEF = keyboard_def_compressed),
         const_declaration!(pub VIAL_KEYBOARD_ID = keyboard_id),
     ]
+    .map(|s| "#[allow(clippy::redundant_static_lifetimes)]\n".to_owned() + s.as_str())
     .join("\n");
     fs::write(&out_file, const_declarations).unwrap();
 }

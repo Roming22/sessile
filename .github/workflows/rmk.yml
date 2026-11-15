@@ -11,23 +11,15 @@ jobs:
     steps:
       - uses: cargo-bins/cargo-binstall@main
       - uses: actions/checkout@v5
-      - name: Cache cargo registry and build
-        uses: actions/cache@v4
-        id: cargo-cache
+      - uses: Swatinem/rust-cache@v2
         with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            rmk/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('rmk/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-${{ hashFiles('rmk/Cargo.lock') }}
+          workspaces: rmk
+          cache-on-failure: true
       - name: Install flip-link, cargo-make, and cargo-binutils
-        if: steps.cargo-cache.outputs.cache-hit != 'true'
         run: cargo binstall cargo-make cargo-hex-to-uf2 flip-link cargo-binutils -y
       - name: Add target
-        run: rustup target add thumbv7em-none-eabihf
+        working-directory: ./rmk
+        run: rustup show && rustup target add thumbv7em-none-eabihf
       - name: Build uf2 firmware
         working-directory: ./rmk
         run: cargo make uf2 --release
