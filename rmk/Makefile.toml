@@ -11,6 +11,14 @@ command = "cargo"
 args = ["build", "--release"]
 dependencies = ["install-llvm-tools", "flip-link"]
 
+[tasks.build-fast]
+command = "cargo"
+args = ["build", "--profile", "fast"]
+dependencies = ["install-llvm-tools", "flip-link"]
+
+[tasks.fast]
+alias = "build-fast"
+
 [tasks.objcopy]
 install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = [
     "objcopy",
@@ -19,6 +27,15 @@ install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = [
 command = "cargo"
 args = ["objcopy", "--release", "--", "-O", "ihex", "sessile.hex"]
 dependencies = ["build"]
+
+[tasks.objcopy-fast]
+install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = [
+    "objcopy",
+    "--help",
+] }
+command = "cargo"
+args = ["objcopy", "--profile", "fast", "--", "-O", "ihex", "sessile.hex"]
+dependencies = ["build-fast"]
 
 [tasks.uf2]
 install_crate = { crate_name = "cargo-hex-to-uf2", binary = "cargo", test_arg = [
@@ -37,10 +54,22 @@ args = [
 ]
 dependencies = ["objcopy"]
 
-# [tasks.uf2]
-# command = "rm"
-# args = ["sessile.hex"]
-# dependencies = ["hex-to-uf2"]
+[tasks.uf2-fast]
+install_crate = { crate_name = "cargo-hex-to-uf2", binary = "cargo", test_arg = [
+    "hex-to-uf2",
+    "--help",
+] }
+command = "cargo"
+args = [
+    "hex-to-uf2",
+    "--input-path",
+    "sessile.hex",
+    "--output-path",
+    "sessile.uf2",
+    "--family",
+    "nrf52840",
+]
+dependencies = ["objcopy-fast"]
 
 [tasks.default]
 alias = "uf2"

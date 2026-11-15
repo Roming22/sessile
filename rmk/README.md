@@ -18,10 +18,14 @@ If you wish to build RMK yourself:
 
 1. 📦 Install Rust: https://rustup.rs
 2. 🎯 Add the target: `rustup target add thumbv7em-none-eabihf`
-3. 🔧 Install tools: `cargo install flip-link cargo-make`
-4. 🏗️ Build: `cd rmk && cargo make uf2 --release`
-5. 📤 Flash: Double tap the button on your XIAO to enter the bootloader and drag
+3. 🔧 Install tools: `cargo install flip-link cargo-make cargo-binutils cargo-hex-to-uf2`
+4. 🏗️ Iterate: `cd rmk && cargo make fast` (keymap edits, ~8s)
+5. 📦 Ship / flash: `cd rmk && cargo make uf2 --release` (small UF2 for releases)
+6. 📤 Flash: Double tap the button on your XIAO to enter the bootloader and drag
    the `.uf2` file to the mounted disk
+
+For a flashable build during iteration (faster compile, larger binary):
+`cd rmk && cargo make uf2-fast`
 
 ## 💡 Tips for nRF52840
 

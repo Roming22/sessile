@@ -9,7 +9,19 @@ alwaysApply: true
 After any edit under `rmk/` (keymap, config, Cargo, source, `vial.json`, etc.), rebuild before considering the task done.
 
 ```bash
+cd rmk && cargo make fast
+```
+
+Use the fast profile for compile checks (~8s keymap edits vs ~14s release). Before flashing or shipping, build the release UF2:
+
+```bash
 cd rmk && cargo make uf2 --release
+```
+
+For a quick flashable build during iteration (larger binary than release):
+
+```bash
+cd rmk && cargo make uf2-fast
 ```
 
 Do not wait for the user to ask. If the build fails, fix it and rebuild.
