@@ -19,23 +19,14 @@ debouncer = "fast"
 [layout]
 rows = 4
 cols = 7
-layers = 6
-matrix_map = """
+# L/R drive unilateral_tap. Thumbs are bilateral (`*`) so a same-hand
+# home-row mod still holds when Space/Tab/LGui/Enter is pressed.
+map = """
 (0,0,L) (1,0,L) (2,0,L) (3,0,L) (0,1,R) (1,1,R) (2,1,R) (3,1,R)
 (0,2,L) (1,2,L) (2,2,L) (3,2,L) (0,3,R) (1,3,R) (2,3,R) (3,3,R)
 (0,4,L) (1,4,L) (2,4,L) (3,4,L) (0,5,R) (1,5,R) (2,5,R) (3,5,R)
-                (0,6,L) (1,6,L) (2,6,R) (3,6,R)
+                (0,6,*) (1,6,*) (2,6,*) (3,6,*)
 """
-
-# Ported from zmk/config (alpha / fn_num / symbol / system / shortcut / gaming).
-# ZMK &mt is balanced (permissive hold); &lt is hold-preferred (HP). Hold is 150ms.
-# Mod-morphs are RMK forks. F13 is a dummy for the symbol-layer dot/colon morph
-# so it does not collide with the plain Dot on fn_num. TD(0)/TD(1) wrap the
-# underscore/pipe morph because this RMK build cannot nest SHIFTED inside MT.
-# zmk/config/combos/3_system.dtsi is not included by combos.dtsi, so it is omitted.
-#
-# Combo actions and fork triggers do not expand @aliases or layer names; they
-# must match the token after alias + layer-name resolution (e.g. LT(3, S, HP)).
 
 [aliases]
 # Alpha home-row mods (HRM) and layer-taps (HP)
@@ -76,7 +67,10 @@ dollar = "SHIFTED(4)"
 amp = "SHIFTED(7)"
 dot_colon = "F13"
 
-[[layer]]
+[keymap]
+layers = 6
+
+[[keymap.layer]]
 name = "alpha"
 keys = """
 No           No           No           No            No            No           No           No
@@ -85,7 +79,7 @@ No           @hrm_d       @hrm_c       @hrm_r        @hrm_n        @hrm_h       
                           @lt_space    Tab           LGui          @lt_enter
 """
 
-[[layer]]
+[[keymap.layer]]
 name = "fn_num"
 keys = """
 No           No           No           No            No            No           No           No
@@ -94,7 +88,7 @@ No           F10          F11          F12           0             1            
                           __           __            __            __
 """
 
-[[layer]]
+[[keymap.layer]]
 name = "symbol"
 keys = """
 No           No           No           No            No            No           No           No
@@ -103,7 +97,7 @@ No           @hp_grave    @hp_bslh     @under        @hp_minus     @hp_slash    
                           __           __            __            __
 """
 
-[[layer]]
+[[keymap.layer]]
 name = "system"
 keys = """
 No           No           No           No            No            No           No           No
@@ -112,7 +106,7 @@ No           Home         PageDown     End           Left          Down         
                           __           __            __            __
 """
 
-[[layer]]
+[[keymap.layer]]
 name = "shortcut"
 keys = """
 No           No           No           No            No            No           No           No
@@ -121,7 +115,7 @@ No           AudioVolDown AudioMute    AudioVolUp    WM(Left, LGui) WM(PageDown,
                           __           __            __            __
 """
 
-[[layer]]
+[[keymap.layer]]
 name = "gaming"
 keys = """
 No           No           No           No            No            No           No           No
@@ -165,14 +159,13 @@ morses = [
 ]
 
 [behavior.morse.profiles]
-HRM = { enable_flow_tap = true, unilateral_tap = true, permissive_hold = true, hold_timeout = "150ms", gap_timeout = "250ms", quick_tap_timeout = "150ms" }
+HRM = { enable_flow_tap = true, unilateral_tap = true, permissive_hold = true, hold_timeout = "150ms", gap_timeout = "0ms" }
 # ZMK &lt default flavor = "hold-preferred"
-HP = { enable_flow_tap = false, hold_on_other_press = true, unilateral_tap = false, hold_timeout = "150ms", gap_timeout = "250ms" }
+HP = { enable_flow_tap = false, unilateral_tap = true, hold_timeout = "150ms", gap_timeout = "0ms" }
 
 [behavior.fork]
-# This RMK build cannot nest SHIFTED/WM inside MT, so unshifted morph taps use
-# MT(plain_key, mod) and shifted morphs keep the triggering Shift.
-# Triggers must match the token after alias expansion.
+# Unshifted morph taps use MT(plain_key, mod); shifted morphs keep the triggering
+# Shift. Triggers must match the token after alias expansion.
 forks = [
     # ZMK backslash / caret (mt_bslh)
     { trigger = "MT(Backslash, LAlt, HP)", negative_output = "MT(Backslash, LAlt, HP)", positive_output = "MT(6, LAlt, HP)", match_any = "LShift|RShift", kept_modifiers = "LShift|RShift" },
@@ -329,5 +322,4 @@ combo_max_num = 128
 combo_max_length = 4
 fork_max_num = 16
 morse_max_num = 8
-# 5ms lockout after a change (default 20ms merges fast double-taps).
 debounce_time = 15
